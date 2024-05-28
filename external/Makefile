@@ -297,6 +297,7 @@ anon/Makefile: anon/configure.ac anon/Makefile.am
 				--enable-gpl \
 				--enable-lzma \
 				--enable-pic \
+				--disable-tool-name-check \
 				--enable-static-libevent --with-libevent-dir=$(EXTERNAL_ROOT) \
 				--enable-static-openssl --with-openssl-dir=$(EXTERNAL_ROOT) \
 				--enable-static-zlib --with-zlib-dir=$(EXTERNAL_ROOT) \
