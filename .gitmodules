@@ -23,5 +23,5 @@
 	url = https://github.com/termux/termux-elf-cleaner
 	ignore = dirty
 [submodule "external/ator-protocol"]
-	path = external/ator-protocol
+	path = external/anon
 	url = https://github.com/ATOR-Development/ator-protocol.git
