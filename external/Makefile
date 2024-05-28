@@ -103,7 +103,7 @@ ALL_CFLAGS := $(REPRODUCIBLE_CFLAGS) $(CFLAGS) -Os
 export CFLAGS := $(ALL_CFLAGS)
 
 
-OUTPUT_FILE := $(EXTERNAL_ROOT)/tor/src/app/tor
+OUTPUT_FILE := $(EXTERNAL_ROOT)/anon/src/app/anon
 INSTALL_DIR := $(EXTERNAL_ROOT)/lib/$(APP_ABI)
 
 .PHONY = clean showsetup \
@@ -113,7 +113,7 @@ INSTALL_DIR := $(EXTERNAL_ROOT)/lib/$(APP_ABI)
 	libevent-clean \
 	lzma-clean \
 	zstd-clean \
-	tor tor-clean
+	anon anon-clean
 
 all: test-setup PREBUILD_SHARED_LIBRARY
 
@@ -285,12 +285,12 @@ zstd-clean:
 
 
 #------------------------------------------------------------------------------#
-# tor
+# anon
 
-tor/Makefile: tor/configure.ac tor/Makefile.am
+anon/Makefile: anon/configure.ac anon/Makefile.am
 	@which pkg-config || (echo "ERROR: pkg-config is required! apt-get install pkg-config"; exit 1)
-	cd tor && ./autogen.sh
-	cd tor && \
+	cd anon && ./autogen.sh
+	cd anon && \
 			./configure \
 				--host=$(ALTHOST) \
 				--enable-android \
@@ -304,55 +304,55 @@ tor/Makefile: tor/configure.ac tor/Makefile.am
 				--disable-module-dirauth \
 				--disable-asciidoc \
 				--prefix=$(EXTERNAL_ROOT)
-	grep -E '^# *define +HAVE_LZMA +1$$' tor/orconfig.h
-	grep -E '^# *define +HAVE_ZSTD +1$$' tor/orconfig.h
-	grep -E '^# *define +ENABLE_OPENSSL +1$$' tor/orconfig.h
-	grep -E '^# *define +HAVE_TLS_METHOD +1$$' tor/orconfig.h
+	grep -E '^# *define +HAVE_LZMA +1$$' anon/orconfig.h
+	grep -E '^# *define +HAVE_ZSTD +1$$' anon/orconfig.h
+	grep -E '^# *define +ENABLE_OPENSSL +1$$' anon/orconfig.h
+	grep -E '^# *define +HAVE_TLS_METHOD +1$$' anon/orconfig.h
 
-tor-build-stamp: tor/Makefile
-	$(MAKE) -C tor
+anon-build-stamp: anon/Makefile
+	$(MAKE) -C anon
 	touch $@
 
-tor: zlib-build-stamp lzma-build-stamp zstd-build-stamp libevent-build-stamp openssl-build-stamp tor-build-stamp
+anon: zlib-build-stamp lzma-build-stamp zstd-build-stamp libevent-build-stamp openssl-build-stamp anon-build-stamp
 
-tor-clean:
+anon-clean:
 	-rm -f $(OUTPUT_FILE)
-	-rm -f tor-build-stamp
-	-cd tor && \
+	-rm -f anon-build-stamp
+	-cd anon && \
 		git clean -fdx > /dev/null
 
 
 #------------------------------------------------------------------------------#
-# create and clean libtor.so
+# create and clean libanon.so
 
-PREBUILD_SHARED_LIBRARY: tor
+PREBUILD_SHARED_LIBRARY: anon
 	file $(OUTPUT_FILE) | grep $(GREP_CHECK)
 	install -d $(EXTERNAL_ROOT)/lib/$(APP_ABI)
-	cp $(OUTPUT_FILE) $(INSTALL_DIR)/libtor.so
-	cp openssl/configdata.pm tor/orconfig.h $(INSTALL_DIR)/
+	cp $(OUTPUT_FILE) $(INSTALL_DIR)/libanon.so
+	cp openssl/configdata.pm anon/orconfig.h $(INSTALL_DIR)/
 ifneq ($(DEBUG), 1)
-	ls -l  $(INSTALL_DIR)/libtor.so
+	ls -l  $(INSTALL_DIR)/libanon.so
 	##$(NDK_TOOLCHAIN_BASE)/bin/$(ALTHOST)-strip --strip-unneeded -R .note -R .comment --strip-debug \
-	##	$(INSTALL_DIR)/libtor.so
+	##	$(INSTALL_DIR)/libanon.so
 	$(NDK_TOOLCHAIN_BASE)/bin/llvm-strip --strip-unneeded -R .note -R .comment --strip-debug \
-		$(INSTALL_DIR)/libtor.so
-	$(EXTERNAL_ROOT)/bin/termux-elf-cleaner --api-level $(NDK_PLATFORM_LEVEL) $(INSTALL_DIR)/libtor.so
-	ls -l  $(INSTALL_DIR)/libtor.so
+		$(INSTALL_DIR)/libanon.so
+	$(EXTERNAL_ROOT)/bin/termux-elf-cleaner --api-level $(NDK_PLATFORM_LEVEL) $(INSTALL_DIR)/libanon.so
+	ls -l  $(INSTALL_DIR)/libanon.so
 endif
 	@echo "check if all the libs got included:"
-	grep "tor_lzma_state_size_precalc" $(INSTALL_DIR)/libtor.so
+	grep "tor_lzma_state_size_precalc" $(INSTALL_DIR)/libanon.so
 	install -d $(EXTERNAL_ROOT)/test/$(APP_ABI)
-	cp tor/src/test/test tor/src/test/test-memwipe tor/src/test/test-slow \
+	cp anon/src/test/test anon/src/test/test-memwipe anon/src/test/test-slow \
 		$(EXTERNAL_ROOT)/test/$(APP_ABI)
 
 PREBUILD_SHARED_LIBRARY-clean:
-	-rm $(INSTALL_DIR)/libtor.so
+	-rm $(INSTALL_DIR)/libanon.so
 
 
 #------------------------------------------------------------------------------#
 # cleanup, cleanup, put the toys away
 
-clean: zlib-clean openssl-clean libevent-clean lzma-clean zstd-clean tor-clean
+clean: zlib-clean openssl-clean libevent-clean lzma-clean zstd-clean anon-clean
 
 
 #------------------------------------------------------------------------------#

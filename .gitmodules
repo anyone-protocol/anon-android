@@ -1,7 +1,3 @@
-[submodule "external/tor"]
-	path = external/tor
-	url = https://github.com/guardianproject/tor.git
-	ignore = dirty
 [submodule "external/libevent"]
 	path = external/libevent
 	url = https://github.com/libevent/libevent.git
@@ -26,3 +22,6 @@
 	path = external/elf-cleaner
 	url = https://github.com/termux/termux-elf-cleaner
 	ignore = dirty
+[submodule "external/ator-protocol"]
+	path = external/ator-protocol
+	url = https://github.com/ATOR-Development/ator-protocol.git

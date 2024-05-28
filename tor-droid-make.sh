@@ -60,7 +60,7 @@ build_external_dependencies()
 	default_abis=`echo $default_abis | sed -E "s,(\s?)$abi(\s?),\1\2,"`
 	APP_ABI=$abi make -C external clean
 	APP_ABI=$abi make -C external
-	binary=external/lib/$abi/libtor.so
+	binary=external/lib/$abi/libanon.so
 	test -e $binary || (echo ERROR $abi missing $binary; exit 1)
     done
     for abi in $default_abis; do
@@ -73,11 +73,11 @@ build_app()
 {
     echo "Building tor-android"
     build_external_dependencies
-    if [ -z $1 ] || [ $1 = 'debug' ]; then
-        ./gradlew assembleDebug
-    else
-        ./gradlew assembleRelease javadocJar sourcesJar
-    fi
+    # if [ -z $1 ] || [ $1 = 'debug' ]; then
+    #     ./gradlew assembleDebug
+    # else
+    #     ./gradlew assembleRelease javadocJar sourcesJar
+    # fi
 }
 
 buildinfo()
@@ -204,16 +204,16 @@ release()
 
     fetch_submodules clean
     build_app release
-    artifact="tor-android"
-    # version must match getVersionName() in tor-android-binary/build.gradle
-    version=$(git describe --tags --always)
-    aar=${artifact}-${version}.aar
-    cd tor-android-binary/build/outputs/aar/
-    mv ../../libs/${artifact}-${version}-*.jar ./
-    mv *-release.aar $aar
-    buildinfo $artifact $version $aar
-    pom $artifact $version
-    bundle $artifact $version
+    # artifact="tor-android"
+    # # version must match getVersionName() in tor-android-binary/build.gradle
+    # version=$(git describe --tags --always)
+    # aar=${artifact}-${version}.aar
+    # cd tor-android-binary/build/outputs/aar/
+    # mv ../../libs/${artifact}-${version}-*.jar ./
+    # mv *-release.aar $aar
+    # buildinfo $artifact $version $aar
+    # pom $artifact $version
+    # bundle $artifact $version
 }
 
 # https://help.sonatype.com/repomanager2/staging-releases/artifact-bundles
