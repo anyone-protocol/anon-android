@@ -1,4 +1,4 @@
-These instructions are for building tor-android on a Debian based system.
+These instructions are for building anon-android on a Debian based system.
 
 First install the prerequisite packages:
 
@@ -22,16 +22,16 @@ export ANDROID_NDK_HOME=~/Android/Sdk/ndk/25.2.9519653
 
 Be sure that you have all of the git submodules up-to-date:
 ```bash
-./tor-droid-make.sh fetch
+./anon-make.sh fetch
 ```
 
 To build, run:
 ```bash
 # make a universal tor-android library for every supported architecture
-./tor-droid-make.sh build 
+./anon-make.sh build 
 # make a tor-android library for particular architectures from:
 # arm64-v8a armeabi-v7a x86 x86_64, e.g.:
-./tor-droid-make.sh build -a arm64-v8a
+./anon-make.sh build -a arm64-v8a
 ```
 
 This will produce an unsigned tor-android AAR

@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdk 34
+    defaultConfig {
+        applicationId "io.anyone.android.sample"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField 'int', 'VERSION_CODE', "${rootProject.ext.versionCode}"
+        buildConfigField 'String', 'VERSION_NAME', "\"${rootProject.ext.versionName}\""
+    }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/com.android.tools/proguard/coroutines.pro', 'META-INF/com.android.tools/proguard/coroutines.pro']
+        }
+    }
+
+
+    buildTypes {
+        debug {
+
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    namespace 'io.anyone.android.sample'
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
+    }
+    lint {
+        abortOnError false
+    }
+}
+
+repositories {
+    maven { url "https://raw.githubusercontent.com/guardianproject/gpmaven/master" }
+}
+
+dependencies {
+//    implementation 'info.guardianproject:tor-android:0.4.8.11'
+//    implementation (name:'anon-android-binary-release',ext:'aar') //use this if you want to test your local AAR build
+    implementation(project(":anon-android-binary"))
+    implementation 'info.guardianproject:jtorctl:0.4.5.7'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
+}

@@ -1,1 +1,1 @@
-include ':tor-android-binary', ':sampletorapp'
+include ':anon-android-binary', ':sampleanonapp'

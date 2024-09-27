@@ -5,10 +5,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.6.1'
         classpath 'com.vanniktech:gradle-maven-publish-plugin:0.24.0' // NEW
         classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.10.2' // NEW
-
     }
 }
 
@@ -24,9 +23,9 @@ ext {
     targetSdkVersion = 33
     versionCode = 4811
     versionName = "0.4.8.11"
-    LIBRARY_GROUP = "info.guardianproject"
-    LIBRARY_ARTIFACT_ID = "tor-android"
+    LIBRARY_GROUP = "io.anyone"
+    LIBRARY_ARTIFACT_ID = "anon-android"
     LIBRARY_VERSION_NAME = versionName
-    LIBRARY_URL = "https://github.com/guardianproject/tor-android"
-    LIBRARY_GIT_URL = "https://github.com/guardianproject/tor-android"
+    LIBRARY_URL = "https://github.com/anyone-protocol/anon-android"
+    LIBRARY_GIT_URL = "https://github.com/anyone-protocol/anon-android"
 }
