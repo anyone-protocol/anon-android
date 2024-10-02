@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
                 public void onReceive(Context context, Intent intent) {
                     String status = intent.getStringExtra(AnonService.EXTRA_STATUS);
                     Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
-                    webView.loadUrl("https://check.torproject.org/");
+                    webView.loadUrl("https://check.en.anyone.tech/");
 
                 }
             }, new IntentFilter(AnonService.ACTION_STATUS), Context.RECEIVER_NOT_EXPORTED);
@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
                 public void onReceive(Context context, Intent intent) {
                     String status = intent.getStringExtra(AnonService.EXTRA_STATUS);
                     Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
-                    webView.loadUrl("https://check.torproject.org/");
+                    webView.loadUrl("https://check.en.anyone.tech/");
 
                 }
             }, new IntentFilter(AnonService.ACTION_STATUS));

@@ -140,12 +140,12 @@ public class AnonServiceTest {
         assertTrue(canConnectToSocket("localhost", socksPort));
         assertTrue(canConnectToSocket("localhost", httpTunnelPort));
 
-        assertNotEquals(InetAddress.getByName(null), InetAddress.getByName("check.torproject.org"));
+        assertNotEquals(InetAddress.getByName(null), InetAddress.getByName("check.en.anyone.tech"));
         assertFalse("URLConnection should not use Anon by default", NetCipher.isURLConnectionUsingTor());
         Log.i(TAG, "NetCipher.setProxy()");
         NetCipher.setProxy("localhost", 5);
         try {
-            checkIsAnon(NetCipher.getHttpURLConnection("https://check.torproject.org/api/ip"));
+            checkIsAnon(NetCipher.getHttpURLConnection("https://check.en.anyone.tech/api/ip"));
             fail();
         } catch (Exception e) {
             // success!
@@ -158,7 +158,7 @@ public class AnonServiceTest {
         Log.i(TAG, "Content-Length: " + c.getContentLength());
         Log.i(TAG, "CONTENTS: " + new String(IOUtils.readFully(c.getInputStream(), 100)));
 
-        assertTrue(checkIsAnon(NetCipher.getHttpURLConnection("https://check.torproject.org/api/ip")));
+        assertTrue(checkIsAnon(NetCipher.getHttpURLConnection("https://check.en.anyone.tech/api/ip")));
 
         serviceRule.unbindService();
         stoppedLatch.await();
