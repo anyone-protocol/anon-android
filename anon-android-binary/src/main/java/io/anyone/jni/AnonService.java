@@ -332,6 +332,7 @@ public class AnonService extends Service {
                 setDefaultProxyPorts();
 
                 ArrayList<String> lines = new ArrayList<>(Arrays.asList("anon", "--verify-config", // must always be here
+                        "--agree-to-terms",
                         "--RunAsDaemon", "0",
                         "-f", getAnonrc(context).getAbsolutePath(),
                         "--defaults-anonrc", getDefaultsAnonrc(context).getAbsolutePath(),
