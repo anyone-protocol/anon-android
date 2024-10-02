@@ -1,62 +1,85 @@
-#
-# The provisioning is parsed from the .gitlab-ci.yml's "release" job.
-#
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
-require 'pathname'
-require 'tempfile'
-require 'yaml'
-
-srvpath = Pathname.new(File.dirname(__FILE__)).realpath
-configfile = YAML.load_file(File.join(srvpath, "/.gitlab-ci.yml"))
-remote_url = 'https://github.com/guardianproject/tor-android.git'
-
-# set up essential environment variables
-env = Hash.new
-env['CI_PROJECT_DIR'] = '/builds/guardianproject/tor-android'
-env_file = Tempfile.new('env')
-File.chmod(0644, env_file.path)
-env.each do |k,v|
-    env_file.write("export #{k}='#{v}'\n")
-end
-env_file.rewind
-
-sourcepath = '/etc/profile.d/env.sh'
-header = "#!/bin/bash -ex\nsource #{sourcepath}\ncd $CI_PROJECT_DIR\n"
-
-script_file = Tempfile.new('script')
-File.chmod(0755, script_file.path)
-script_file.write(header)
-configfile['release']['script'].flatten.each do |line|
-    script_file.write(line)
-    script_file.write("\n")
-end
-script_file.rewind
-
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.box = "fdroid/basebox-buster64"
-  config.vm.synced_folder '.', '/vagrant', disabled: true
-  config.vm.provision "file", source: env_file.path, destination: 'env.sh'
-  config.vm.provision :shell, inline: <<-SHELL
-    set -ex
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
 
-    echo 'deb https://deb.debian.org/debian/ buster-updates main' >> /etc/apt/sources.list
-    echo 'deb https://deb.debian.org/debian-security/ buster/updates main' >> /etc/apt/sources.list
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  config.vm.box = "debian/bookworm64"
 
-    apt-get --allow-releaseinfo-change-suite update  # buster went from stable to oldstable
-    apt-get -qy remove grub-pc  # updating grub requires human interaction
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
 
-    mv ~vagrant/env.sh #{sourcepath}
-    source #{sourcepath}
-    mkdir -p $(dirname $CI_PROJECT_DIR)
-    git clone #{remote_url} $CI_PROJECT_DIR
-    chown -R vagrant.vagrant $(dirname $CI_PROJECT_DIR)
-SHELL
-  config.vm.provision "file", source: script_file.path, destination: 'script.sh'
-#TODO?  config.vm.provision :shell, inline: 'sudo SUDO_FORCE_REMOVE=yes dpkg --purge sudo'
-  config.vm.provision :shell, inline: '/home/vagrant/script.sh'
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
 
-  # remove this or comment it out to use VirtualBox instead of libvirt
-  config.vm.provider :libvirt do |libvirt|
-    libvirt.memory = 1536
-  end
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Disable the default share of the current code directory. Doing this
+  # provides improved isolation between the vagrant box and your host
+  # by making sure your Vagrantfile isn't accessible to the vagrant box.
+  # If you use this you may want to enable additional shared subfolders as
+  # shown above.
+  config.vm.synced_folder ".", "/vagrant", type: "smb" #disabled: true
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
+  # end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y python3 python3-requests autotools-dev automake autogen autoconf libtool gettext-base autopoint
+    apt-get install -y git make g++ po4a pkg-config openjdk-17-jdk openjdk-17-jre android-sdk
+
+    git clone --depth=1 --branch=0.4 https://gitlab.com/fdroid/sdkmanager.git
+    git -C sdkmanager checkout -B master b5a5640fc4cdc151696b2d27a5886119ebd3a8b7
+    ./sdkmanager/sdkmanager.py "ndk;25.2.9519653"
+
+    cd /vagrant
+    ./anon-make.sh build
+  SHELL
 end
