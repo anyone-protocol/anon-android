@@ -49,7 +49,6 @@ dependencies {
 //    implementation 'info.guardianproject:tor-android:0.4.8.11'
 //    implementation (name:'anon-android-binary-release',ext:'aar') //use this if you want to test your local AAR build
     implementation(project(":anon-android-binary"))
-    implementation 'info.guardianproject:jtorctl:0.4.5.7'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 

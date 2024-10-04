@@ -16,8 +16,7 @@ import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ServiceTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import info.guardianproject.netcipher.NetCipher;
-import net.freehaven.tor.control.ConfigEntry;
-import net.freehaven.tor.control.TorControlConnection;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -63,6 +62,7 @@ public class AnonServiceTest {
     private File defaultsAnonrc;
     private File anonrc;
 
+    /** @noinspection ResultOfMethodCallIgnored*/
     @Before
     public void setUp() {
         context = InstrumentationRegistry.getTargetContext();
@@ -74,6 +74,7 @@ public class AnonServiceTest {
         anonrc.delete();
     }
 
+    /** @noinspection ResultOfMethodCallIgnored*/
     @After
     public void tearDown() {
         defaultsAnonrc.delete();
@@ -255,12 +256,13 @@ public class AnonServiceTest {
         connection.setConnectTimeout(0); // blocking connect with TCP timeout
         connection.setReadTimeout(0);
         assertEquals(200, connection.getResponseCode());
-        IOUtils.copy(connection.getInputStream(), new FileWriter(new File("/dev/null")));
+        IOUtils.copy(connection.getInputStream(), new FileWriter("/dev/null"));
 
         serviceRule.unbindService();
         stoppedLatch.await();
     }
 
+    /** @noinspection SameParameterValue*/
     private static boolean canConnectToSocket(String host, int port) {
         try {
             Socket socket = new Socket();
@@ -287,8 +289,9 @@ public class AnonServiceTest {
     /**
      * Return the value of the first match as a {@link String}, with the quotes
      * stripped off.
+     * @noinspection SameParameterValue
      */
-    private static String getConf(TorControlConnection anonControlConnection, String key) {
+    private static String getConf(AnonControlConnection anonControlConnection, String key) {
         try {
             List<ConfigEntry> configEntries = anonControlConnection.getConf(key);
             return configEntries.get(0).value;

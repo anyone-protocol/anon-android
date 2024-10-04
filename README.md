@@ -1,24 +1,23 @@
 ## Tor Android
 
-This is native Android `TorService` built on the Tor shared library built for
-Android.  The included _libtor.so_ binaries can also be used directly as a tor
-daemon.  Binaries are available on the <a href="https://github.com/guardianproject/gpmaven">Guardian Project Maven Repo</a>:
+This is native Android `AnonService` built on the Anon shared library built for
+Android.  The included _libanon.so_ binaries can also be used directly as an anon
+daemon.
 
 First add the repo to your top level `build.gradle` project:
 ```gradle
 allprojects {
     repositories {
         // ...
-        maven { url "https://raw.githubusercontent.com/guardianproject/gpmaven/master" }
+        maven { url "https://raw.githubusercontent.com/anyone-protocol/gpmaven/master" }
     }
 }
 ```
 
-Then add the `tor-android` and `jtorctl` dependencies to your project:
+Then add the `anon-android` dependency to your project:
 ```gradle
 dependencies {
-    implementation 'info.guardianproject:tor-android:0.4.8.11'
-    implementation 'info.guardianproject:jtorctl:0.4.5.7'
+    implementation 'io.anyone:anon-android:0.4.8.11'
 }
 ```
 
@@ -31,7 +30,7 @@ Apps using tor-android need to declare the `INTERNET` permission in their Androi
 Tor protects your privacy on the internet by hiding the connection 
 between your Internet address and the services you use. We believe Tor
 is reasonably secure, but please ensure you read the instructions and
-configure it properly. Learn more at https://torproject.org/
+configure it properly. Learn more at https://anyone.io/
 
 ## Minimum Requirements 
 
@@ -51,8 +50,7 @@ It runs on the following hardware architectures:
 
 ## How to Build
 
-Please see: https://raw.githubusercontent.com/guardianproject/tor-android/master/BUILD.md
+Please see: https://github.com/anyone-protocol/anon-android/blob/main/BUILD.md
 
-This can be built reproducibly using the included Vagrant VM setup.  That will
-run with either _libvirt_ or VirtualBox.  The provisioning is based on the
-"release" job in _.gitlab-ci.yml_.
+This can be built using the included Docker or Vagrant VM setup. Vagrant will
+run with VirtualBox.

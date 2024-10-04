@@ -9,10 +9,6 @@ import android.os.IBinder;
 import android.os.Process;
 import android.util.Log;
 
-import net.freehaven.tor.control.RawEventListener;
-import net.freehaven.tor.control.TorControlCommands;
-import net.freehaven.tor.control.TorControlConnection;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -37,11 +33,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
  * A {@link Service} that runs Anon.  To control Anon via the {@code ControlPort},
  * first bind to this using {@link #bindService(Intent, android.content.ServiceConnection, int)},
  * then use {@link #getAnonControlConnection()} to get an instance of
- * {@link TorControlConnection} from {@code jtorctl}.  If
- * {@link TorControlCommands#EVENT_CIRCUIT_STATUS} is not included in
- * {@link TorControlConnection#setEvents(java.util.List)}, then this service
+ * {@link AnonControlConnection} from {@code jtorctl}.  If
+ * {@link AnonControlCommands#EVENT_CIRCUIT_STATUS} is not included in
+ * {@link AnonControlConnection#setEvents(java.util.List)}, then this service
  * will not be able to function properly since it relies on those events to
  * detect the state of Anon.
+ * @noinspection unused
  */
 @SuppressWarnings("deprecation")
 public class AnonService extends Service {
@@ -179,6 +176,7 @@ public class AnonService extends Service {
      */
     private static File getAppAnonServiceDataDir(Context context) {
         File dir = new File(getAppAnonServiceDir(context), "data");
+        //noinspection ResultOfMethodCallIgnored
         dir.mkdir();
         if (!(dir.setReadable(true, true) && dir.setWritable(true, true) && dir.setExecutable(true, true))) {
             throw new IllegalStateException("Cannot create " + dir);
@@ -207,7 +205,7 @@ public class AnonService extends Service {
     @SuppressWarnings({"FieldMayBeFinal"," unused"})
     private int anonControlFd = -1;
 
-    private volatile TorControlConnection anonControlConnection;
+    private volatile AnonControlConnection anonControlConnection;
 
     /**
      * This lock must be acquired before calling createAnonConfiguration() and
@@ -221,6 +219,7 @@ public class AnonService extends Service {
 
     private native static FileDescriptor prepareFileDescriptor(String path);
 
+    /** @noinspection BooleanMethodIsAlwaysInverted*/
     private native boolean mainConfigurationSetCommandLine(String[] args);
 
     private native boolean mainConfigurationSetupControlSocket();
@@ -260,10 +259,10 @@ public class AnonService extends Service {
      */
     private final RawEventListener startedEventListener = (keyword, data) -> {
         if (AnonService.STATUS_STARTING.equals(AnonService.currentStatus)
-                && TorControlCommands.EVENT_CIRCUIT_STATUS.equals(keyword)
+                && AnonControlCommands.EVENT_CIRCUIT_STATUS.equals(keyword)
                 && data != null && !data.isEmpty()) {
             String[] tokenArray = data.split(" ");
-            if (tokenArray.length > 1 && TorControlCommands.CIRC_EVENT_BUILT.equals(tokenArray[1])) {
+            if (tokenArray.length > 1 && AnonControlCommands.CIRC_EVENT_BUILT.equals(tokenArray[1])) {
                 AnonService.broadcastStatus(AnonService.this, AnonService.STATUS_ON);
             }
         }
@@ -293,7 +292,10 @@ public class AnonService extends Service {
                 };
                 controlPortFileObserver.startWatching();
                 controlPortThreadStarted.countDown();
+
+                //noinspection ResultOfMethodCallIgnored
                 countDownLatch.await(10, TimeUnit.SECONDS);
+
                 controlPortFileObserver.stopWatching();
                 File controlSocket = new File(observeDir, CONTROL_SOCKET_NAME);
                 if (!controlSocket.canRead()) {
@@ -303,11 +305,11 @@ public class AnonService extends Service {
                 FileDescriptor controlSocketFd = prepareFileDescriptor(getControlSocket(AnonService.this).getAbsolutePath());
                 InputStream is = new FileInputStream(controlSocketFd);
                 OutputStream os = new FileOutputStream(controlSocketFd);
-                anonControlConnection = new TorControlConnection(is, os);
+                anonControlConnection = new AnonControlConnection(is, os);
                 anonControlConnection.launchThread(true);
                 anonControlConnection.authenticate(new byte[0]);
                 anonControlConnection.addRawEventListener(startedEventListener);
-                anonControlConnection.setEvents(Collections.singletonList(TorControlCommands.EVENT_CIRCUIT_STATUS));
+                anonControlConnection.setEvents(Collections.singletonList(AnonControlCommands.EVENT_CIRCUIT_STATUS));
 
                 socksPort = getPortFromGetInfo("net/listeners/socks");
                 httpTunnelPort = getPortFromGetInfo("net/listeners/httptunnel");
@@ -478,12 +480,12 @@ public class AnonService extends Service {
      * Send a signal to the Anon process to shut it down or halt it.
      * Does not wait for a response, or report errors.
      *
-     * @see TorControlConnection#shutdownTor(String)
+     * @see AnonControlConnection#shutdownAnon(String)
      */
     private void shutdownAnon() {
         try {
             if (anonControlConnection != null) {
-                anonControlConnection.shutdownTor(TorControlCommands.SIGNAL_SHUTDOWN);
+                anonControlConnection.shutdownAnon(AnonControlCommands.SIGNAL_SHUTDOWN);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -491,12 +493,12 @@ public class AnonService extends Service {
     }
 
     /**
-     * Get an instance of {@link TorControlConnection} to control this instance
+     * Get an instance of {@link AnonControlConnection} to control this instance
      * of Anon, and configure it to set events.
      *
-     * @see TorControlConnection#setEvents(java.util.List)
+     * @see AnonControlConnection#setEvents(java.util.List)
      */
-    public TorControlConnection getAnonControlConnection() {
+    public AnonControlConnection getAnonControlConnection() {
         return anonControlConnection;
     }
 
