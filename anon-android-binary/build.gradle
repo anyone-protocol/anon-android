@@ -15,11 +15,11 @@ def getVersionName = { ->
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         /*
@@ -74,13 +74,13 @@ dependencies {
 android.libraryVariants.configureEach { variant ->
     def name = variant.buildType.name
     if (name == BuilderConstants.DEBUG) {
-        return; // Skip debug builds.
+        return // Skip debug builds.
     }
     def task = project.tasks.create "jar${name.capitalize()}", Jar
     task.dependsOn variant.javaCompileProvider, sourcesJar, javadocJar
     task.from variant.javaCompileProvider.get().destinationDir
     //task.exclude('info/guardianproject/**/BuildConfig.**')
-    artifacts.add('archives', task);
+    artifacts.add('archives', task)
     task.archiveBaseName = 'tor-android'
 }
 

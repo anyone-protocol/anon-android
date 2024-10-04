@@ -20,7 +20,7 @@ allprojects {
 
 ext {
     minSdkVersion = 21
-    targetSdkVersion = 33
+    targetSdkVersion = 35
     versionCode = 4811
     versionName = "0.4.8.11"
     LIBRARY_GROUP = "io.anyone"
