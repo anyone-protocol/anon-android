@@ -24,4 +24,4 @@
 	ignore = dirty
 [submodule "external/ator-protocol"]
 	path = external/anon
-	url = https://github.com/ATOR-Development/ator-protocol.git
+	url = https://github.com/anyone-protocol/ator-protocol.git
