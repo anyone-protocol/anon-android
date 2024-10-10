@@ -9,8 +9,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField 'int', 'VERSION_CODE', "${rootProject.ext.versionCode}"
-        buildConfigField 'String', 'VERSION_NAME', "\"${rootProject.ext.versionName}\""
     }
     packagingOptions {
         resources {

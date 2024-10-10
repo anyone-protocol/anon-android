@@ -6,8 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.6.1'
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.24.0' // NEW
-        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.10.2' // NEW
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.0' // NEW
     }
 }
 

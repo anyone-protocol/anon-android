@@ -250,8 +250,6 @@ public class AnonServiceTest {
         //URL url = new URL("http://dl.google.com/android/ndk/android-ndk-r9b-linux-x86_64.tar.bz2");
         // ~3MB
         URL url = new URL("https://dl.google.com/android/repository/platform-tools_r24-linux.zip");
-        // 55KB
-        //URL url = new URL("https://jcenter.bintray.com/com/android/tools/build/gradle/2.2.3/gradle-2.2.3.jar");
         HttpURLConnection connection = NetCipher.getHttpURLConnection(url);
         connection.setConnectTimeout(0); // blocking connect with TCP timeout
         connection.setReadTimeout(0);
