@@ -17,7 +17,7 @@ allprojects {
 Then add the `anon-android` dependency to your project:
 ```gradle
 dependencies {
-    implementation 'io.anyone:anon-android:0.4.8.11'
+    implementation 'io.anyone:anon-android:0.4.9.7'
 }
 ```
 

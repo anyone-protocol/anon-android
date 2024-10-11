@@ -20,8 +20,8 @@ allprojects {
 ext {
     minSdkVersion = 21
     targetSdkVersion = 35
-    versionCode = 4811
-    versionName = "0.4.8.11"
+    versionCode = 4812
+    versionName = "0.4.9.7"
     LIBRARY_GROUP = "io.anyone"
     LIBRARY_ARTIFACT_ID = "anon-android"
     LIBRARY_VERSION_NAME = versionName
