@@ -294,9 +294,12 @@ anon/Makefile: anon/configure.ac anon/Makefile.am
 			./configure \
 				--host=$(ALTHOST) \
 				--enable-android \
+				--enable-jni \
 				--enable-gpl \
 				--enable-lzma \
 				--enable-pic \
+				--disable-system-anonrc \
+				--disable-systemd \
 				--disable-tool-name-check \
 				--enable-static-libevent --with-libevent-dir=$(EXTERNAL_ROOT) \
 				--enable-static-openssl --with-openssl-dir=$(EXTERNAL_ROOT) \
@@ -304,6 +307,8 @@ anon/Makefile: anon/configure.ac anon/Makefile.am
 				--enable-zstd \
 				--disable-module-dirauth \
 				--disable-asciidoc \
+				--disable-html-manual \
+				--disable-manpage \
 				--prefix=$(EXTERNAL_ROOT)
 	grep -E '^# *define +HAVE_LZMA +1$$' anon/orconfig.h
 	grep -E '^# *define +HAVE_ZSTD +1$$' anon/orconfig.h
