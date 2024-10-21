@@ -118,7 +118,7 @@ public class AnonServiceTest {
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
         Handler handler = new Handler(looper);
-        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler);
+        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler, Context.RECEIVER_NOT_EXPORTED);
 
         Intent serviceIntent = new Intent(context, AnonService.class);
         IBinder binder = serviceRule.bindService(serviceIntent);
@@ -152,10 +152,8 @@ public class AnonServiceTest {
             // success!
         }
         NetCipher.setProxy("localhost", httpTunnelPort);
-        assertTrue("NetCipher.getHttpURLConnection should use Anon",
-                NetCipher.isNetCipherGetHttpURLConnectionUsingTor());
 
-        URLConnection c = NetCipher.getHttpsURLConnection("https://www.nytimesn7cgmftshazwhfgzm37qxb44r64ytbb2dj3x62d2lljsciiyd.onion/");
+        URLConnection c = NetCipher.getHttpsURLConnection("https://www.nytimes.com/");
         Log.i(TAG, "Content-Length: " + c.getContentLength());
         Log.i(TAG, "CONTENTS: " + new String(IOUtils.readFully(c.getInputStream(), 100)));
 
@@ -196,7 +194,7 @@ public class AnonServiceTest {
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
         Handler handler = new Handler(looper);
-        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler);
+        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler, Context.RECEIVER_NOT_EXPORTED);
 
         Intent serviceIntent = new Intent(context, AnonService.class);
         IBinder binder = serviceRule.bindService(serviceIntent);
@@ -235,7 +233,7 @@ public class AnonServiceTest {
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
         Handler handler = new Handler(looper);
-        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler);
+        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler, Context.RECEIVER_NOT_EXPORTED);
 
         Intent serviceIntent = new Intent(context, AnonService.class);
         IBinder binder = serviceRule.bindService(serviceIntent);

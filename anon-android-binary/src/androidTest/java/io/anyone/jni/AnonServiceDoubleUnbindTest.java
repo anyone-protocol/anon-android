@@ -69,7 +69,7 @@ public class AnonServiceDoubleUnbindTest {
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
         Handler handler = new Handler(looper);
-        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler);
+        context.registerReceiver(receiver, new IntentFilter(AnonService.ACTION_STATUS), null, handler, Context.RECEIVER_NOT_EXPORTED);
 
         Intent serviceIntent = new Intent(context, AnonService.class);
         IBinder binder = serviceRule.bindService(serviceIntent);
