@@ -22,7 +22,7 @@ fetch_submodules()
 check_android_dependencies()
 {
     if [ -d /opt/android-sdk ]; then
-	export ANDROID_HOME=/opt/android-sdk
+        export ANDROID_HOME=/opt/android-sdk
     elif [ ! -e "$ANDROID_HOME" ]; then
         echo "ANDROID_HOME must be set!"
         exit 1
@@ -31,19 +31,19 @@ check_android_dependencies()
 
     # openssl wants a var called ANDROID_NDK_HOME
     if [ ! -e "$ANDROID_NDK_HOME" ]; then
-	ndkVersion=$(sed -En 's,NDK_REQUIRED_REVISION *:?= *([0-9.]+).*,\1,p' external/Makefile)
-	echo $ANDROID_HOME/ndk/$ndkVersion/source.properties
-	if [ -n "$ANDROID_NDK_ROOT" ]; then
-	    export ANDROID_NDK_HOME="$ANDROID_NDK_ROOT"
-	elif [ -e "$ANDROID_HOME/ndk/$ndkVersion/source.properties" ]; then
-	    export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/$ndkVersion"
-	elif [ -e "$ANDROID_HOME/ndk-bundle/source.properties" ]; then
-	    export ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
-	else
+        ndkVersion=$(sed -En 's,NDK_REQUIRED_REVISION *:?= *([0-9.]+).*,\1,p' external/Makefile)
+        echo $ANDROID_HOME/ndk/$ndkVersion/source.properties
+        if [ -n "$ANDROID_NDK_ROOT" ]; then
+            export ANDROID_NDK_HOME="$ANDROID_NDK_ROOT"
+        elif [ -e "$ANDROID_HOME/ndk/$ndkVersion/source.properties" ]; then
+            export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/$ndkVersion"
+        elif [ -e "$ANDROID_HOME/ndk-bundle/source.properties" ]; then
+            export ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
+        else
             echo "ANDROID_NDK_HOME must be set!"
             exit 1
-	fi
-	export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
+        fi
+        export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
     fi
     echo "Using Android SDK: $ANDROID_HOME"
     echo "Using Android NDK: $ANDROID_NDK_HOME"
@@ -57,15 +57,15 @@ build_external_dependencies()
     fi
     make -C external -f build-tools
     for abi in $abis; do
-	default_abis=`echo $default_abis | sed -E "s,(\s?)$abi(\s?),\1\2,"`
-	APP_ABI=$abi make -C external clean
-	APP_ABI=$abi make -C external
-	binary=external/lib/$abi/libanon.so
-	test -e $binary || (echo ERROR $abi missing $binary; exit 1)
+        default_abis=`echo $default_abis | sed -E "s,(\s?)$abi(\s?),\1\2,"`
+        APP_ABI=$abi make -C external clean
+        APP_ABI=$abi make -C external
+        binary=external/lib/$abi/libanon.so
+        test -e $binary || (echo ERROR $abi missing $binary; exit 1)
     done
     for abi in $default_abis; do
-	echo remove dangling symlink: $abi
-	rm -f anon-android-binary/src/main/jniLibs/$abi
+        echo remove dangling symlink: $abi
+        rm -f anon-android-binary/src/main/jniLibs/$abi
     done
 }
 
@@ -192,9 +192,9 @@ EOF
 release()
 {
     if [ -z "$force" ] && [ -n "$(git status --porcelain)" ]; then
-	printf '\nERROR: the git repo must be clean before building:\n\n'
-	git status
-	exit 1
+        printf '\nERROR: the git repo must be clean before building:\n\n'
+        git status
+        exit 1
     fi
 
     check_android_dependencies
@@ -223,9 +223,9 @@ bundle()
     version=$2
     echo "Looking for GPG keys to sign with:"
     if gpg --list-secret-keys | grep -Eo '[0-9A-F]{40}'; then
-	for f in ${artifact}-*${version}*.*; do
-	    gpg --armor --detach-sign $f
-	done
+        for f in ${artifact}-*${version}*.*; do
+            gpg --armor --detach-sign $f
+        done
     fi
     # TODO faketime, strip-deterministic, or some other way to set ZIP timestamps
     jar -cvf bundle-${artifact}-${version}.jar ${artifact}-*${version}*.*

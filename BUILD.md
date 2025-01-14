@@ -1,3 +1,5 @@
+# On Linux
+
 These instructions are for building anon-android on a Debian based system.
 
 First install the prerequisite packages:
@@ -11,13 +13,13 @@ sudo apt install git make g++ po4a pkg-config openjdk-17-jdk openjdk-17-jre
 
 Then obtain the Android SDK and NDK. The Android SDK is installed by default with Android Studio, and the NDK can be downloaded from within Android Studio's SDK manager.
 
-for now, tor-android is built with NDK toolchain 25.2.9519654
+for now, anon-android is built with NDK toolchain 27.2.12479018
 
 Then set these environment variables for the SDK and NDK:
 
 ```bash
 export ANDROID_HOME=~/Android/Sdk
-export ANDROID_NDK_HOME=~/Android/Sdk/ndk/25.2.9519653
+export ANDROID_NDK_HOME=~/Android/Sdk/ndk/27.2.12479018
 ```
 
 Be sure that you have all of the git submodules up-to-date:
@@ -35,3 +37,9 @@ To build, run:
 ```
 
 This will produce an unsigned tor-android AAR
+
+# On MacOS with an Intel processor
+
+```bash
+vagrant up
+```

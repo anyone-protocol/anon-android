@@ -14,7 +14,7 @@ ENV ANDROID_HOME=/usr/lib/android-sdk
 
 RUN git clone --depth=1 --branch=0.4 https://gitlab.com/fdroid/sdkmanager.git
 RUN git -C sdkmanager checkout -B master b5a5640fc4cdc151696b2d27a5886119ebd3a8b7
-RUN ./sdkmanager/sdkmanager.py "ndk;25.2.9519653"
+RUN ./sdkmanager/sdkmanager.py "ndk;27.2.12479018"
 
 RUN ./anon-make.sh fetch
 RUN ./anon-make.sh build
