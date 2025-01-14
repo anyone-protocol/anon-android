@@ -12,7 +12,7 @@
 	ignore = dirty
 [submodule "external/xz"]
 	path = external/xz
-	url = https://git.tukaani.org/xz.git
+	url = https://github.com/tukaani-project/xz.git
 	ignore = dirty
 [submodule "external/zlib"]
 	path = external/zlib
