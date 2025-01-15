@@ -75,11 +75,12 @@ Vagrant.configure("2") do |config|
     apt-get install -y python3 python3-requests autotools-dev automake autogen autoconf libtool gettext-base autopoint
     apt-get install -y git make g++ po4a pkg-config openjdk-17-jdk openjdk-17-jre android-sdk
 
-    git clone --depth=1 --branch=0.4 https://gitlab.com/fdroid/sdkmanager.git
-    git -C sdkmanager checkout -B master b5a5640fc4cdc151696b2d27a5886119ebd3a8b7
+    rm -rf sdkmanager
+    git clone --depth 1 --branch "0.6.10" https://gitlab.com/fdroid/sdkmanager.git
     ./sdkmanager/sdkmanager.py "ndk;27.2.12479018"
 
     cd /vagrant
+    ./anon-make.sh fetch
     ./anon-make.sh build
   SHELL
 end

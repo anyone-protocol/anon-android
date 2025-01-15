@@ -29,17 +29,22 @@ Be sure that you have all of the git submodules up-to-date:
 
 To build, run:
 ```bash
-# make a universal tor-android library for every supported architecture
+# make a universal anon-android library for every supported architecture
 ./anon-make.sh build 
-# make a tor-android library for particular architectures from:
+# make an anon-android library for particular architectures from:
 # arm64-v8a armeabi-v7a x86 x86_64, e.g.:
 ./anon-make.sh build -a arm64-v8a
 ```
 
-This will produce an unsigned tor-android AAR
+This will produce an unsigned anon-android AAR
 
-# On MacOS with an Intel processor
+# On other OSes with an Intel processor using Vagrant
 
 ```bash
-vagrant up
+brew install vagrant
+vagrant up --provision
 ```
+
+# With Docker
+
+There's also a Dockerfile if you like Docker more than Vagrant.
