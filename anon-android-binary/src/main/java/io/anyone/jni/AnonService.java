@@ -346,7 +346,8 @@ public class AnonService extends Service {
                         "--CookieAuthentication", "0",
                         // can be moved to ControlPort messages
                         "--LogMessageDomains", "1",
-                        "--TruncateLogFile", "1"
+                        "--TruncateLogFile", "1",
+                        "--Log", String.format("%s syslog", BuildConfig.DEBUG ? "notice" : "warn")
                 ));
                 String[] verifyLines = lines.toArray(new String[0]);
                 if (!mainConfigurationSetCommandLine(verifyLines)) {
