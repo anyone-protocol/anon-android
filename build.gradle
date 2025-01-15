@@ -10,21 +10,13 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.vanniktech.maven.publish" version "0.30.0"
+}
+
 allprojects {
     repositories {
         mavenCentral()
         google()
     }
-}
-
-ext {
-    minSdkVersion = 21
-    targetSdkVersion = 35
-    versionCode = 4910
-    versionName = "0.4.9.10"
-    LIBRARY_GROUP = "io.anyone"
-    LIBRARY_ARTIFACT_ID = "anon-android"
-    LIBRARY_VERSION_NAME = versionName
-    LIBRARY_URL = "https://github.com/anyone-protocol/anon-android"
-    LIBRARY_GIT_URL = "https://github.com/anyone-protocol/anon-android"
 }

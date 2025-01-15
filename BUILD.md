@@ -48,3 +48,21 @@ vagrant up --provision
 # With Docker
 
 There's also a Dockerfile if you like Docker more than Vagrant.
+
+
+# Publishing
+
+anon-android is published on [Maven Central](https://central.sonatype.com).
+
+1. Check and update the POM configuration in [gradle.properties](gradle.properties).
+   (See https://vanniktech.github.io/gradle-maven-publish-plugin/central/#configuring-the-pom)
+ 
+2. Check, if your Maven Central secrets are configured.
+   (See https://vanniktech.github.io/gradle-maven-publish-plugin/central/#secrets)
+
+3. Run
+```bash
+./gradlew anon-android-binary:publishAllPublicationsToCentralRepository
+```
+
+4. Finally check the resulting artifacts and publish here: https://central.sonatype.com/publishing

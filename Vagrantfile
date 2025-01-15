@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
     ./sdkmanager/sdkmanager.py "ndk;27.2.12479018"
 
     cd /vagrant
-    ./anon-make.sh fetch
+    ./anon-make.sh fetch -c
     ./anon-make.sh build
   SHELL
 end

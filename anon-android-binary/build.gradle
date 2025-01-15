@@ -2,17 +2,7 @@ import com.android.builder.core.BuilderConstants
 
 plugins {
     id 'com.android.library'
-    id "com.vanniktech.maven.publish" version "0.29.0"
-}
-
-/* gets the version name from the latest Git tag, stripping the leading 'tor-' off */
-def getVersionName = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'describe', '--tags', '--always'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
+    id "com.vanniktech.maven.publish" version "0.30.0"
 }
 
 android {
@@ -32,9 +22,8 @@ android {
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
 
-        buildConfigField 'int', 'VERSION_CODE', "${rootProject.ext.versionCode}"
-        buildConfigField 'String', 'VERSION_NAME', "\"${rootProject.ext.versionName}\""
-
+        buildConfigField 'int', 'VERSION_CODE', "4910"
+        buildConfigField 'String', 'VERSION_NAME', "\"0.4.9.10\""
     }
 
     buildTypes {
@@ -48,12 +37,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     packagingOptions {
         resources {
             excludes += ['META-INF/androidx.localbroadcastmanager_localbroadcastmanager.version']
         }
     }
-
 
     namespace 'io.anyone.jni'
 
@@ -74,63 +63,3 @@ dependencies {
     androidTestImplementation 'commons-io:commons-io:2.13.0'
     androidTestImplementation 'commons-net:commons-net:3.6'
 }
-
-
-android.libraryVariants.configureEach { variant ->
-    def name = variant.buildType.name
-    if (name == BuilderConstants.DEBUG) {
-        return // Skip debug builds.
-    }
-    def task = project.tasks.create "jar${name.capitalize()}", Jar
-    task.dependsOn variant.javaCompileProvider, sourcesJar, javadocJar
-    task.from variant.javaCompileProvider.get().destinationDir
-    //task.exclude('info/guardianproject/**/BuildConfig.**')
-    artifacts.add('archives', task)
-    task.archiveBaseName = 'tor-android'
-}
-
-tasks.withType(AbstractArchiveTask).configureEach {
-    dirMode = 0755
-    fileMode = 0644
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
-}
-
-tasks.register('sourcesJar', Jar) {
-    from android.sourceSets.main.java.srcDirs
-    archiveClassifier = 'sources'
-    archiveBaseName = 'tor-android-' + getVersionName()
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    options.noTimestamp = true
-    options.addBooleanOption("Xdoclint:none", true)
-    options.addStringOption('Xmaxwarns', '1')
-    options.addStringOption('charset', 'UTF-8') // to match Maven's case
-    android.libraryVariants.configureEach { variant ->
-        if (variant.name == 'release') {
-            owner.classpath += variant.javaCompileProvider.get().classpath
-        }
-    }
-    exclude '**/R.html', '**/R.*.html', '**/index.html'
-}
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
-    archiveBaseName = 'tor-android-' + getVersionName()
-}
-
-//apply from: 'publishLocal.gradle'
-//apply from: 'publishMavenCentral.gradle'
-//apply from: 'publishMavenCentralAlt.gradle'
-
-/**
-signing {
-    useGpgCmd()
-    sign publishing.publications
-}
-**/
