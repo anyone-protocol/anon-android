@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
 
     rm -rf sdkmanager
     git clone --depth 1 --branch "0.6.10" https://gitlab.com/fdroid/sdkmanager.git
-    ./sdkmanager/sdkmanager.py "ndk;27.2.12479018"
+    ./sdkmanager/sdkmanager.py "ndk;28.2.13676358"
 
     cd /vagrant
     ./anon-make.sh fetch -c
