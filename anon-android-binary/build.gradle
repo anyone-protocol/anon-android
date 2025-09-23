@@ -22,8 +22,8 @@ android {
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
 
-        buildConfigField 'int', 'VERSION_CODE', "4910"
-        buildConfigField 'String', 'VERSION_NAME', "\"0.4.9.10\""
+        buildConfigField 'int', 'VERSION_CODE', "4911"
+        buildConfigField 'String', 'VERSION_NAME', "\"0.4.9.11\""
     }
 
     buildTypes {
