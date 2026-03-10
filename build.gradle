@@ -5,13 +5,13 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.12.3'
-        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:2.0.0' // NEW
+        classpath 'com.android.tools.build:gradle:9.1.0'
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:2.1.0' // NEW
     }
 }
 
 plugins {
-    id "com.vanniktech.maven.publish" version "0.34.0"
+    id "com.vanniktech.maven.publish" version "0.36.0"
 }
 
 allprojects {
