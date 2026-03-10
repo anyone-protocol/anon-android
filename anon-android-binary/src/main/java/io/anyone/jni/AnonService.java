@@ -258,13 +258,12 @@ public class AnonService extends Service {
      * Announce Anon is available for connections once the first circuit is complete
      */
     private final RawEventListener startedEventListener = (keyword, data) -> {
+        // Fixed. See https://github.com/guardianproject/tor-android/pull/191
         if (AnonService.STATUS_STARTING.equals(AnonService.currentStatus)
-                && AnonControlCommands.EVENT_CIRCUIT_STATUS.equals(keyword)
-                && data != null && !data.isEmpty()) {
-            String[] tokenArray = data.split(" ");
-            if (tokenArray.length > 1 && AnonControlCommands.CIRC_EVENT_BUILT.equals(tokenArray[1])) {
-                AnonService.broadcastStatus(AnonService.this, AnonService.STATUS_ON);
-            }
+                && AnonControlCommands.EVENT_NOTICE_MSG.equals(keyword)
+                && data != null && data.toLowerCase().contains("bootstrapped 100%"))
+        {
+            AnonService.broadcastStatus(AnonService.this, AnonService.STATUS_ON);
         }
     };
 
