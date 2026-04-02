@@ -76,8 +76,8 @@ Vagrant.configure("2") do |config|
     apt-get install -y git make g++ po4a pkg-config openjdk-17-jdk openjdk-17-jre android-sdk
 
     rm -rf sdkmanager
-    git clone --depth 1 --branch "0.6.10" https://gitlab.com/fdroid/sdkmanager.git
-    ./sdkmanager/sdkmanager.py "ndk;28.2.13676358"
+    git clone --depth 1 --branch "0.6.11" https://gitlab.com/fdroid/sdkmanager.git
+    ./sdkmanager/sdkmanager.py "ndk;29.0.14206865"
 
     cd /vagrant
     ./anon-make.sh fetch -c
