@@ -146,18 +146,18 @@ public class AnonServiceTest {
         Log.i(TAG, "NetCipher.setProxy()");
         NetCipher.setProxy("localhost", 5);
         try {
-            checkIsAnon(NetCipher.getHttpURLConnection("https://check.en.anyone.tech/api/ip"));
+            checkIsAnon(new URL("https://check.en.anyone.tech/api/ip").openConnection(NetCipher.getProxy()));
             fail();
         } catch (Exception e) {
             // success!
         }
         NetCipher.setProxy("localhost", httpTunnelPort);
 
-        URLConnection c = NetCipher.getHttpsURLConnection("https://www.nytimes.com/");
+        URLConnection c = new URL("https://www.nytimes.com/").openConnection(NetCipher.getProxy());
         Log.i(TAG, "Content-Length: " + c.getContentLength());
         Log.i(TAG, "CONTENTS: " + new String(IOUtils.readFully(c.getInputStream(), 100)));
 
-        assertTrue(checkIsAnon(NetCipher.getHttpURLConnection("https://check.en.anyone.tech/api/ip")));
+        assertTrue(checkIsAnon(new URL("https://check.en.anyone.tech/api/ip").openConnection(NetCipher.getProxy())));
 
         serviceRule.unbindService();
         stoppedLatch.await();
@@ -243,12 +243,12 @@ public class AnonServiceTest {
         NetCipher.setProxy(
                 new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("localhost", anonService.getSocksPort())));
         assertTrue("NetCipher.getHttpURLConnection should use Anon",
-                NetCipher.isNetCipherGetHttpURLConnectionUsingTor());
+                checkIsAnon(new URL("https://check.en.anyone.tech/api/ip").openConnection(NetCipher.getProxy())));
         // ~350MB
         //URL url = new URL("http://dl.google.com/android/ndk/android-ndk-r9b-linux-x86_64.tar.bz2");
         // ~3MB
         URL url = new URL("https://dl.google.com/android/repository/platform-tools_r24-linux.zip");
-        HttpURLConnection connection = NetCipher.getHttpURLConnection(url);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection(NetCipher.getProxy());
         connection.setConnectTimeout(0); // blocking connect with TCP timeout
         connection.setReadTimeout(0);
         assertEquals(200, connection.getResponseCode());
