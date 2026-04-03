@@ -205,6 +205,8 @@ public class AnonServiceTest {
 
         serviceRule.unbindService();
         stoppedLatch.await();
+
+        context.unregisterReceiver(receiver);
     }
 
     @Test
@@ -256,6 +258,8 @@ public class AnonServiceTest {
 
         serviceRule.unbindService();
         stoppedLatch.await();
+
+        context.unregisterReceiver(receiver);
     }
 
     /** @noinspection SameParameterValue*/
