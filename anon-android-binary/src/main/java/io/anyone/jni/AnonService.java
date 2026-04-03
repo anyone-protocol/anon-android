@@ -308,7 +308,7 @@ public class AnonService extends Service {
                 anonControlConnection.launchThread(true);
                 anonControlConnection.authenticate(new byte[0]);
                 anonControlConnection.addRawEventListener(startedEventListener);
-                anonControlConnection.setEvents(Collections.singletonList(AnonControlCommands.EVENT_CIRCUIT_STATUS));
+                anonControlConnection.setEvents(Collections.singletonList(AnonControlCommands.EVENT_NOTICE_MSG));
 
                 socksPort = getPortFromGetInfo("net/listeners/socks");
                 httpTunnelPort = getPortFromGetInfo("net/listeners/httptunnel");
