@@ -12,9 +12,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.JsonReader;
 import android.util.Log;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ServiceTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import info.guardianproject.netcipher.NetCipher;
 
 import org.apache.commons.io.FileUtils;
@@ -38,6 +38,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +66,7 @@ public class AnonServiceTest {
     /** @noinspection ResultOfMethodCallIgnored*/
     @Before
     public void setUp() {
-        context = InstrumentationRegistry.getTargetContext();
+        context =  InstrumentationRegistry.getInstrumentation().getTargetContext();
         defaultsAnonrc = AnonService.getDefaultsAnonrc(context);
         defaultsAnonrc.deleteOnExit();
         defaultsAnonrc.delete();
@@ -155,7 +156,7 @@ public class AnonServiceTest {
 
         URLConnection c = new URL("https://www.nytimes.com/").openConnection(NetCipher.getProxy());
         Log.i(TAG, "Content-Length: " + c.getContentLength());
-        Log.i(TAG, "CONTENTS: " + new String(IOUtils.readFully(c.getInputStream(), 100)));
+        Log.i(TAG, "CONTENTS: " + new String(IOUtils.toByteArray(c.getInputStream(), 100)));
 
         assertTrue(checkIsAnon(new URL("https://check.en.anyone.tech/api/ip").openConnection(NetCipher.getProxy())));
 
@@ -168,8 +169,8 @@ public class AnonServiceTest {
     public void testOverridingDefaultsAnonrc() throws TimeoutException, InterruptedException, IOException {
         final String dnsPort = "DNSPort";
         final String testValue = "auto";
-        FileUtils.write(defaultsAnonrc, dnsPort + " 53\n");
-        FileUtils.write(anonrc, dnsPort + " " + testValue + "\n");
+        FileUtils.write(defaultsAnonrc, dnsPort + " 53\n", StandardCharsets.UTF_8);
+        FileUtils.write(anonrc, dnsPort + " " + testValue + "\n", StandardCharsets.UTF_8);
 
         final CountDownLatch startedLatch = new CountDownLatch(1);
         final CountDownLatch stoppedLatch = new CountDownLatch(1);
@@ -244,6 +245,7 @@ public class AnonServiceTest {
 
         NetCipher.setProxy(
                 new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("localhost", anonService.getSocksPort())));
+
         assertTrue("NetCipher.getHttpURLConnection should use Anon",
                 checkIsAnon(new URL("https://check.en.anyone.tech/api/ip").openConnection(NetCipher.getProxy())));
         // ~350MB
@@ -254,7 +256,7 @@ public class AnonServiceTest {
         connection.setConnectTimeout(0); // blocking connect with TCP timeout
         connection.setReadTimeout(0);
         assertEquals(200, connection.getResponseCode());
-        IOUtils.copy(connection.getInputStream(), new FileWriter("/dev/null"));
+        IOUtils.copy(connection.getInputStream(), new FileWriter("/dev/null"), StandardCharsets.UTF_8);
 
         serviceRule.unbindService();
         stoppedLatch.await();
@@ -297,8 +299,10 @@ public class AnonServiceTest {
             return configEntries.get(0).value;
             //return value.substring(1, value.length() - 1);
         } catch (IOException | NullPointerException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
+
         return null;
     }
 
