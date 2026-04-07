@@ -88,6 +88,10 @@ public class AnonServiceTest {
      */
     @Test
     public void testBindService() throws TimeoutException, InterruptedException, IOException {
+        // Shutting down anon is asynchronous. If we're not waiting a little bit,
+        // memory will not be cleaned up properly, and a restart will throw an assertion.
+        Thread.sleep(500);
+
         final CountDownLatch startingLatch = new CountDownLatch(1);
         final CountDownLatch startedLatch = new CountDownLatch(1);
         final CountDownLatch stoppingLatch = new CountDownLatch(1);

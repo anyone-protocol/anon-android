@@ -46,6 +46,11 @@ public class AnonServiceDoubleUnbindTest {
     @Test
     public void testBindService() throws Exception {
         startAndUnbind();
+
+        // Shutting down anon is asynchronous. If we're not waiting a little bit,
+        // memory will not be cleaned up properly, and a restart will throw an assertion.
+        Thread.sleep(500);
+
         startAndUnbind();
     }
 
