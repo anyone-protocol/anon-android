@@ -43,10 +43,10 @@ android {
         }
     }
 
-    namespace 'io.anyone.jni'
+    namespace = 'io.anyone.jni'
 
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
     lint {
         targetSdk 36

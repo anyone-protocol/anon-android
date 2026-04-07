@@ -29,13 +29,13 @@ android {
     }
 
 
-    namespace 'io.anyone.android.sample'
+    namespace = 'io.anyone.android.sample'
     compileOptions {
         targetCompatibility JavaVersion.VERSION_17
         sourceCompatibility JavaVersion.VERSION_17
     }
     lint {
-        abortOnError false
+        abortOnError = false
     }
 }
 
